@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Site Review — comment on any website, let AI fix it</title>
+  <meta name="description" content="A browser extension + MCP server for leaving comments on website elements. Pick an element, write a note, and an AI coding agent reads and resolves it." />
+
+  <!-- Open Graph / link-preview metadata (crawled by garutyunov.com). -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://gaarutyunov.github.io/site-review/" />
+  <meta property="og:title" content="Site Review" />
+  <meta property="og:description" content="Comment on any website element and let an AI coding agent fix it." />
+  <meta property="og:image" content="./public/site-review.png" />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="icon" type="image/png" href="./public/site-review.png" />
+  <link rel="apple-touch-icon" href="./public/site-review.png" />
+
+  <!-- Fonts: same families as garutyunov.com (Geist / Geist Mono / Fira Mono). -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Fira+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- The GA UI kit: design tokens + self-registering <ga-*> web components.
+       Vendored (see vendor/README.md) so the page is buildless and needs no
+       CDN at runtime. Relative paths => works at any deploy base (incl. PR
+       previews under /pr-preview/pr-N/). -->
+  <link rel="stylesheet" href="./vendor/ga-ui-kit.css" />
+  <link rel="stylesheet" href="./landing.css" />
+  <script type="module" src="./vendor/ga-ui-kit.min.js"></script>
+</head>
+<body class="ga-theme">
+  <a class="skip-link" href="#install">Skip to install</a>
+
+  <!-- Sticky site header — matches garutyunov.com layout (brand + Home + source). -->
+  <header class="site-header">
+    <a class="brand" href="https://garutyunov.com">German Arutyunov</a>
+    <nav class="site-nav">
+      <a href="https://garutyunov.com">Home</a>
+      <a
+        href="https://github.com/gaarutyunov/site-review"
+        target="_blank"
+        rel="noreferrer noopener"
+        aria-label="Source on GitHub"
+        title="Source on GitHub"
+      >
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="20" height="20">
+          <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.28-.01-1.02-.02-2-3.2.7-3.87-1.54-3.87-1.54-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.69 1.25 3.35.95.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.18-3.1-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.05 11.05 0 0 1 5.79 0c2.21-1.49 3.18-1.18 3.18-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.84 1.18 3.1 0 4.42-2.69 5.39-5.25 5.68.41.35.78 1.05.78 2.12 0 1.53-.01 2.77-.01 3.15 0 .31.21.68.8.56C20.21 21.39 23.5 17.08 23.5 12 23.5 5.65 18.35.5 12 .5Z"/>
+        </svg>
+      </a>
+    </nav>
+  </header>
+
+  <main class="page">
+    <!-- Hero -->
+    <section class="hero">
+      <img class="hero-icon" src="./public/site-review.png" alt="Site Review" width="88" height="88" />
+      <ga-badge>Browser extension + MCP server</ga-badge>
+      <h1>Comment on any website.<br /><span class="accent">Let an AI agent fix it.</span></h1>
+      <p class="lede">
+        Pick an element on any page, jot a note, and tag it with a
+        memorable slug like <code>dancing-gorilla</code>. Your comments flow to a
+        local MCP server that Claude Code, Cursor, and other agents read — and
+        resolve.
+      </p>
+      <div class="hero-cta">
+        <a href="https://github.com/gaarutyunov/site-review">
+          <ga-button variant="primary" size="lg">Get it on GitHub</ga-button>
+        </a>
+        <a href="#install">
+          <ga-button variant="ghost" size="lg">Install &amp; run ↓</ga-button>
+        </a>
+      </div>
+      <p class="hero-hint">
+        Press <ga-kbd>⌥</ga-kbd> <ga-kbd>C</ga-kbd> on any page, click an element,
+        type your comment.
+      </p>
+    </section>
+
+    <!-- Features -->
+    <section class="features" aria-label="Features">
+      <ga-card>
+        <h3>🎯 Pick any element</h3>
+        <p>
+          A VisBug-style picker highlights whatever's under your cursor —
+          including elements inside shadow DOM and third-party widgets. Click to
+          attach a comment.
+        </p>
+      </ga-card>
+      <ga-card>
+        <h3>🏷️ Human-readable slugs</h3>
+        <p>
+          Every element gets a Docker-style handle like
+          <code>dancing-gorilla</code>. Reference it in prose — “replace
+          dancing-gorilla with a spinner” — and rename it anytime.
+        </p>
+      </ga-card>
+      <ga-card>
+        <h3>🗂️ Grouped comments</h3>
+        <p>
+          <ga-kbd>⌥</ga-kbd> <ga-kbd>⇧</ga-kbd> <ga-kbd>C</ga-kbd> starts
+          multi-select: pick several elements and leave one comment covering all
+          of them.
+        </p>
+      </ga-card>
+      <ga-card>
+        <h3>📜 Review curtain</h3>
+        <p>
+          A panel on the right lists every comment on the page. Click one to
+          scroll to and highlight its element.
+        </p>
+      </ga-card>
+      <ga-card>
+        <h3>🔌 MCP for agents</h3>
+        <p>
+          A local server exposes comments over the Model Context Protocol —
+          <code>list_open_comments</code>, <code>resolve_comment</code>, and more
+          — via Streamable HTTP or stdio.
+        </p>
+      </ga-card>
+      <ga-card>
+        <h3>🧭 Resilient anchors</h3>
+        <p>
+          Each comment stores a multi-anchor descriptor (optimized selector,
+          stable attributes, text, nth-path) so highlights survive most DOM
+          changes.
+        </p>
+      </ga-card>
+    </section>
+
+    <!-- How it works -->
+    <section class="flow" aria-label="How it works">
+      <h2>How it works</h2>
+      <div class="flow-grid">
+        <div class="flow-step">
+          <span class="flow-num">1</span>
+          <strong>Comment</strong>
+          <p>The extension pushes each comment to a local server over REST.</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step">
+          <span class="flow-num">2</span>
+          <strong>Store</strong>
+          <p>An Express + SQLite service keeps comments per page URL.</p>
+        </div>
+        <div class="flow-arrow" aria-hidden="true">→</div>
+        <div class="flow-step">
+          <span class="flow-num">3</span>
+          <strong>Fix</strong>
+          <p>An AI agent reads them over MCP, edits the code, and resolves each.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Install -->
+    <section class="install" id="install" aria-label="Install and run">
+      <h2>Install &amp; run</h2>
+
+      <div class="install-block">
+        <h3>1 · Run the MCP server (Docker)</h3>
+        <p>The server ships as a container on the GitHub Container Registry.</p>
+        <ga-code>docker run -d --name site-review -p 4711:4711 -v ~/.site-review:/data ghcr.io/gaarutyunov/site-review:latest</ga-code>
+        <p class="muted">Comments persist in the mounted <code>~/.site-review</code> volume.</p>
+      </div>
+
+      <div class="install-block">
+        <h3>2 · Connect your agent</h3>
+        <p>Point Claude Code (or any MCP client) at the running server:</p>
+        <ga-code>claude mcp add --transport http site-review http://localhost:4711/mcp</ga-code>
+      </div>
+
+      <div class="install-block">
+        <h3>3 · Load the extension</h3>
+        <p>
+          Build it from source, then load
+          <code>packages/extension/.output/chrome-mv3</code> as an unpacked
+          extension in Chrome.
+        </p>
+        <ga-code>git clone https://github.com/gaarutyunov/site-review &amp;&amp; cd site-review &amp;&amp; pnpm install &amp;&amp; pnpm build:extension</ga-code>
+      </div>
+
+      <ga-note>
+        Prefer no Docker? Run <code>pnpm start:server</code> after
+        <code>pnpm build</code>, or wire the stdio entry directly into your
+        agent. See the <a href="https://github.com/gaarutyunov/site-review#readme">README</a>.
+      </ga-note>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <span>
+      Built with <a href="https://github.com/gaarutyunov/ui-kit">GA UI Kit</a> ·
+      MIT © German Arutyunov
+    </span>
+    <a href="https://github.com/gaarutyunov/site-review">github.com/gaarutyunov/site-review</a>
+  </footer>
+
+  <noscript>
+    <p style="max-width:680px;margin:40px auto;padding:0 22px;font-family:system-ui">
+      Site Review's landing uses web components that need JavaScript. The project
+      itself lives at
+      <a href="https://github.com/gaarutyunov/site-review">github.com/gaarutyunov/site-review</a>.
+    </p>
+  </noscript>
+</body>
+</html>
