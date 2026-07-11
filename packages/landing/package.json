@@ -1,0 +1,12 @@
+{
+  "name": "@site-review/landing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Buildless landing page for Site Review, styled with @gaarutyunov/ui-kit.",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "vendor:refresh": "node scripts/refresh-vendor.mjs"
+  }
+}

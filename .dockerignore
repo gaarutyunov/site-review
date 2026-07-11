@@ -1,0 +1,17 @@
+**/node_modules
+**/dist
+**/.output
+**/.wxt
+**/coverage
+**/*.log
+**/*.db
+**/*.db-shm
+**/*.db-wal
+.git
+.github
+# Keep all workspace package manifests so `pnpm install --frozen-lockfile`
+# can validate the lockfile; only heavy build artifacts are excluded above.
+packages/landing/vendor
+packages/landing/public
+**/*.tsbuildinfo
+.DS_Store
