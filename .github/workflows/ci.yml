@@ -31,14 +31,14 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      # Build first: server/extension typechecks resolve @site-review/shared
+      # through its emitted declaration files (dist/). `pnpm -r build` also
+      # assembles the landing page.
+      - name: Build
+        run: pnpm build
+
       - name: Typecheck
         run: pnpm typecheck
 
       - name: Test
         run: pnpm test
-
-      - name: Build
-        run: pnpm build
-
-      - name: Build landing
-        run: pnpm build:landing
