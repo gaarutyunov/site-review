@@ -1,0 +1,41 @@
+name: Deploy landing
+
+# Assemble the buildless landing page and publish it to the root of the
+# gh-pages branch on every push to main. PR previews live under pr-preview/ on
+# the same branch, so keep_files avoids wiping them.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/landing/**"
+      - ".github/workflows/deploy-landing.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # No dependencies to install — the landing is plain HTML/CSS + the
+      # vendored ga-ui-kit bundle. We only need Node to run the copy script.
+      - name: Build landing
+        run: node packages/landing/scripts/build.mjs
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/landing/dist
+          keep_files: true # preserve pr-preview/* directories
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+          commit_message: "deploy: landing from ${{ github.sha }}"

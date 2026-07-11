@@ -1,0 +1,44 @@
+name: Landing PR Preview
+
+# Build the landing page for each pull request and deploy it to
+# https://site-review.garutyunov.com/pr-preview/pr-<N>/
+# A sticky comment with the link is posted on the PR. The preview is removed
+# automatically when the PR is closed.
+#
+# The page uses relative asset paths, so it renders correctly under the preview
+# subpath with no base-path configuration.
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+    paths:
+      - "packages/landing/**"
+      - ".github/workflows/pr-preview.yml"
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pr-preview-${{ github.event.number }}
+  cancel-in-progress: true
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    # Skip forked PRs: they have no write token, so the deploy step would fail.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build landing
+        if: github.event.action != 'closed'
+        run: node packages/landing/scripts/build.mjs
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./packages/landing/dist
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto # deploy on open/sync, remove on close
