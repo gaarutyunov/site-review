@@ -1,7 +1,7 @@
 name: Landing PR Preview
 
 # Build the landing page for each pull request and deploy it to
-# https://gaarutyunov.github.io/site-review/pr-preview/pr-<N>/
+# https://site-review.garutyunov.com/pr-preview/pr-<N>/
 # A sticky comment with the link is posted on the PR. The preview is removed
 # automatically when the PR is closed.
 #

@@ -139,8 +139,9 @@ pnpm dev:landing        # static dev server at http://localhost:8080
 pnpm build:landing      # assemble packages/landing/dist
 ```
 
-It deploys to GitHub Pages on push to `main`, and every PR gets an isolated
-preview under `…/pr-preview/pr-<N>/` (see `.github/workflows`).
+It deploys to [site-review.garutyunov.com](https://site-review.garutyunov.com)
+on push to `main`, and every PR gets an isolated preview under
+`…/pr-preview/pr-<N>/` (see `.github/workflows`).
 
 ## Development
 
