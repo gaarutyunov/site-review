@@ -1,9 +1,12 @@
 import type { Comment } from "@site-review/shared";
 import { COLORS } from "./types";
+import { GithubPanel } from "./GithubPanel";
 
 interface Props {
   open: boolean;
   comments: Comment[];
+  pageUrl: string;
+  pageTitle: string;
   hoveredId: string | null;
   focusedId: string | null;
   onToggle: () => void;
@@ -147,6 +150,13 @@ export function Curtain(props: Props) {
             </div>
           ))}
         </div>
+
+        <GithubPanel
+          pageUrl={props.pageUrl}
+          pageTitle={props.pageTitle}
+          active={open}
+          openCount={openCount}
+        />
       </div>
     </>
   );

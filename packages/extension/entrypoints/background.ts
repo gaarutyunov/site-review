@@ -6,7 +6,12 @@ import {
   deleteComment,
   takenSlugs,
 } from "../lib/db";
-import { pushComment, deleteOnServer, pullComments } from "../lib/server-sync";
+import {
+  pushComment,
+  deleteOnServer,
+  pullComments,
+  githubRequest,
+} from "../lib/server-sync";
 import type { BgRequest, TabCommand } from "../lib/messaging";
 
 export default defineBackground(() => {
@@ -38,6 +43,8 @@ export default defineBackground(() => {
         await deleteComment(msg.id);
         void deleteOnServer(msg.id);
         return { ok: true };
+      case "github":
+        return githubRequest(msg);
     }
   }
 
