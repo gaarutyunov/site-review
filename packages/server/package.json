@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "@octokit/auth-oauth-device": "^8.0.3",
+    "@octokit/rest": "^22.0.1",
     "@site-review/shared": "workspace:*",
     "better-sqlite3": "^12.11.1",
     "cors": "^2.8.5",

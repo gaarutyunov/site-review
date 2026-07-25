@@ -4,6 +4,8 @@ import {
   animals,
 } from "unique-names-generator";
 
+export * from "./github.js";
+
 /**
  * Multi-anchor description of a single DOM element a comment is attached to.
  * Stored so the element can be re-located later even if the page mutates.
