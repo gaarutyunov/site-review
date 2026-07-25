@@ -45,6 +45,14 @@ export class CommentStore {
     this.migrate();
   }
 
+  /**
+   * The underlying connection, so sibling stores (e.g. `GithubStore`) can share
+   * one database file — and one `:memory:` database in tests.
+   */
+  get database(): Database.Database {
+    return this.db;
+  }
+
   private migrate() {
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS comments (

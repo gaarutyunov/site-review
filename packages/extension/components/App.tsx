@@ -403,6 +403,8 @@ export function App({ host }: { host: HTMLElement }) {
       <Curtain
         open={curtainOpen}
         comments={comments}
+        pageUrl={PAGE_URL}
+        pageTitle={document.title}
         hoveredId={hoveredId}
         focusedId={focusedId}
         onToggle={() => setCurtainOpen((o) => !o)}

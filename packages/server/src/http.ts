@@ -4,13 +4,21 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { uniqueSlug, type CommentUpsert } from "@site-review/shared";
 import { CommentStore } from "./store.js";
 import { buildMcpServer } from "./mcp.js";
+import { GithubStore } from "./github/store.js";
+import { githubRouter, type GithubRoutesDeps } from "./github/routes.js";
 
 /**
  * Build the Express app: a REST ingest/query API for the browser extension and
  * a stateless Streamable HTTP MCP endpoint at /mcp for AI agents. Both are
  * backed by the same on-disk SQLite store (Option B from the design).
+ *
+ * `githubDeps` lets tests inject a fake GitHub client / config; in production
+ * the GitHub tables live in the same SQLite database as the comments.
  */
-export function createApp(store: CommentStore) {
+export function createApp(
+  store: CommentStore,
+  githubDeps: Partial<Omit<GithubRoutesDeps, "comments">> = {},
+) {
   const app = express();
   app.use(cors()); // reflect origin — extension posts from chrome-extension://
   app.use(express.json({ limit: "1mb" }));
@@ -62,6 +70,16 @@ export function createApp(store: CommentStore) {
   });
 
   app.get("/pages", (_req, res) => res.json({ pages: store.pages() }));
+
+  // --- GitHub integration ------------------------------------------------
+  app.use(
+    "/github",
+    githubRouter({
+      comments: store,
+      github: githubDeps.github ?? new GithubStore(store.database),
+      ...githubDeps,
+    }),
+  );
 
   // --- MCP Streamable HTTP endpoint (stateless) -------------------------
   app.post("/mcp", async (req: Request, res: Response) => {

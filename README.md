@@ -88,9 +88,15 @@ Environment:
 
 - `SITE_REVIEW_PORT` — HTTP port (default `4711`)
 - `SITE_REVIEW_DB` — SQLite path (default `~/.site-review/comments.db`)
+- `GITHUB_APP_CLIENT_ID` — GitHub App client id; enables `/github/*` (see
+  [Connect to GitHub](#connect-to-github))
 
 Endpoints: `POST /ingest`, `GET /comments`, `GET /comments/:id`,
-`DELETE /comments/:id`, `GET /pages`, `POST /mcp` (MCP Streamable HTTP).
+`DELETE /comments/:id`, `GET /pages`, `POST /mcp` (MCP Streamable HTTP), plus
+the GitHub surface: `POST /github/connect`, `GET /github/status`,
+`POST /github/disconnect`, `GET /github/repos`, `POST /github/bind`,
+`GET|DELETE /github/binding`, `POST /github/detect`, `GET /github/issues`,
+`POST /github/sync`.
 
 ## Load the extension
 
@@ -126,6 +132,60 @@ claude mcp add site-review -- node /ABS/PATH/packages/server/dist/stdio.js
 
 Then ask the agent: *"List open site-review comments and fix them, resolving each
 when done."*
+
+## Connect to GitHub
+
+Comments don't have to stay local: the server can push a page's open comments to
+the GitHub repository the page belongs to — as a **pull-request review** when the
+page is a PR preview, or as a **new/appended issue** otherwise.
+
+### 1. Create a GitHub App (one time)
+
+[github.com/settings/apps/new](https://github.com/settings/apps/new):
+
+- **Homepage URL** — anything (e.g. your fork's URL).
+- **Callback URL** — not needed; instead tick **Enable Device Flow**. The server
+  is a local process with no public callback URL, so it uses the OAuth
+  [device flow](https://docs.github.com/apps/creating-github-apps/writing-code-for-a-github-app/building-a-cli-with-a-github-app).
+- Untick **Webhook → Active**.
+- **Repository permissions**: `Issues` read & write, `Pull requests` read &
+  write, `Metadata` read-only (implied), `Contents` read-only.
+- Create it, then **Install** it on the repositories you want to review.
+
+### 2. Point the server at it
+
+```bash
+export GITHUB_APP_CLIENT_ID=Iv23li...      # App settings → Client ID
+pnpm start:server
+```
+
+No client secret and no private key are needed for the device flow. The server
+logs `GitHub: configured` on boot; without the variable every `/github/*` route
+answers with a "not configured" error and nothing else changes.
+
+The user access token is stored in the same SQLite database as the comments
+(table `github_auth`) and is never returned by any endpoint or written to logs.
+`POST /github/disconnect` deletes it.
+
+### 3. Use it from the extension
+
+Open the curtain (💬) and expand the **GitHub** section:
+
+1. **Connect GitHub** — shows a user code and `github.com/login/device`; enter it
+   there and the panel flips to your login.
+2. **Connect a repository** — the panel proposes repositories it found linked on
+   the page, or you can pick one from the repositories the App is installed on.
+   The choice is remembered per site origin.
+3. **Sync** — the panel shows the resolved target:
+   - a page under `…/pr-preview/pr-<N>/` (the `rossjrw/pr-preview-action`
+     convention this repo's own previews use) syncs to **PR #N**, after checking
+     the PR exists;
+   - anything else syncs to an issue — append to an existing open issue, or
+     create a new one.
+
+Each posted comment carries its element slug and the reviewed page URL. A ledger
+records what was already posted, so re-syncing a page posts only comments added
+since the last sync.
 
 ## Landing page
 
